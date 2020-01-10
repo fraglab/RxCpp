@@ -5,6 +5,12 @@
 #if !defined(RXCPP_RX_SYNCHRONIZE_HPP)
 #define RXCPP_RX_SYNCHRONIZE_HPP
 
+// FL[FD-8704]: Lumberyard 1.19 integration. Linux fix shadow variable
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wshadow"
+#endif
+
 #include "../rx-includes.hpp"
 
 namespace rxcpp {
@@ -259,5 +265,10 @@ inline synchronize_in_one_worker synchronize_new_thread() {
 }
 
 }
+
+// FL[FD-8704]: Lumberyard 1.19 integration. Linux fix shadow variable
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
 
 #endif

@@ -23,6 +23,12 @@
 #if !defined(RXCPP_OPERATORS_RX_OBSERVE_ON_HPP)
 #define RXCPP_OPERATORS_RX_OBSERVE_ON_HPP
 
+// FL[FD-8704]: Lumberyard 1.19 integration. Linux fix shadow variable
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wshadow"
+#endif
+
 #include "../rx-includes.hpp"
 
 namespace rxcpp {
@@ -331,5 +337,10 @@ inline observe_on_one_worker observe_on_new_thread() {
 }
 
 }
+
+// FL[FD-8704]: Lumberyard 1.19 integration. Linux fix shadow variable
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
 
 #endif
