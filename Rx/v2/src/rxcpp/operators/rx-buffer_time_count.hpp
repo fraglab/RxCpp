@@ -144,8 +144,11 @@ struct buffer_with_time_or_count
                 if (id != state->chunk_id)
                     return;
 
-                state->dest.on_next(state->chunk);
-                state->chunk.resize(0);
+                if (state->chunk.size() > 0) {
+                    state->dest.on_next(state->chunk);
+                    state->chunk.resize(0);
+                }
+
                 auto new_id = ++state->chunk_id;
                 auto produce_time = expected + state->period;
                 state->worker.schedule(produce_time, [new_id, produce_time, state](const rxsc::schedulable&){
