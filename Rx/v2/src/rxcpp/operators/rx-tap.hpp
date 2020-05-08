@@ -88,8 +88,8 @@ struct tap
             , out(std::move(o))
         {
         }
-        void on_next(source_value_type v) const {
-            out.on_next(v);
+        void on_next(source_value_type&& v) const {
+            out.on_next(std::forward<source_value_type>(v));
             dest.on_next(v);
         }
         void on_error(rxu::error_ptr e) const {

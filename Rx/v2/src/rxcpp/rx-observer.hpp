@@ -64,7 +64,7 @@ struct OnNextForward<T, State, void>
         s.on_next(t);
     }
     void operator()(state_t& s, T&& t) const {
-        s.on_next(t);
+        s.on_next(std::forward<T>(t));
     }
 };
 
@@ -116,7 +116,7 @@ struct is_on_next_of
 {
     struct not_void {};
     template<class CT, class CF>
-    static auto check(int) -> decltype((*(CF*)nullptr)(*(CT*)nullptr));
+    static auto check(int) -> decltype((*(CF*)nullptr)(std::declval<CT&&>()));
     template<class CT, class CF>
     static not_void check(...);
 
@@ -326,11 +326,8 @@ public:
         return *this;
     }
 
-    void on_next(T& t) const {
-        onnext(t);
-    }
     void on_next(T&& t) const {
-        onnext(std::move(t));
+        onnext(std::forward<T>(t));
     }
     void on_error(rxu::error_ptr e) const {
         onerror(e);
@@ -350,7 +347,6 @@ template<class T>
 struct virtual_observer : public std::enable_shared_from_this<virtual_observer<T>>
 {
     virtual ~virtual_observer() {}
-    virtual void on_next(T&) const {};
     virtual void on_next(T&&) const {};
     virtual void on_error(rxu::error_ptr) const {};
     virtual void on_completed() const {};
@@ -365,11 +361,8 @@ struct specific_observer : public virtual_observer<T>
     }
 
     Observer destination;
-    virtual void on_next(T& t) const {
-        destination.on_next(t);
-    }
     virtual void on_next(T&& t) const {
-        destination.on_next(std::move(t));
+        destination.on_next(std::forward<T>(t));
     }
     virtual void on_error(rxu::error_ptr e) const {
         destination.on_error(e);
